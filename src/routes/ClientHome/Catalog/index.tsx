@@ -5,6 +5,7 @@ import ButtonNextPage from '../../../components/ButtonNextPage';
 import * as productService from '../../../service/product-service'
 import { useEffect, useState } from 'react';
 import { ProductDTO } from '../../../models/product';
+import { useNavigate } from 'react-router-dom';
 
 export default function Catalog() {
 
@@ -12,12 +13,9 @@ export default function Catalog() {
 
     useEffect(() => {
         productService.findAll()
-            .then(
-                result => {
-                    const prods = result.data.content
-                    setProducts(prods)
-                }
-            );
+            .then(result => {
+                setProducts(result.data.content);
+            })
     })
 
     return (
