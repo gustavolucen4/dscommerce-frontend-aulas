@@ -2,12 +2,12 @@ import './style.css';
 import ButtonInverse from '../../../components/ButtonInverse';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import CardDetails from '../../../components/CardDetails';
-import * as productService from '../../../service/product-service'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ProductDTO } from '../../../models/product';
-import axios from 'axios';
+import * as productService from '../../../service/product-service'
+import * as cartService from '../../../service/cart-service'
 
 export default function ProductDetails() {
 
@@ -26,6 +26,13 @@ export default function ProductDetails() {
 
     }, [])
 
+    function handleBuyClick(){
+        if(product){
+            cartService.addProduct(product);
+        }
+        navigate('/cart');
+    }
+
     return (
         <>
             <main>
@@ -35,7 +42,9 @@ export default function ProductDetails() {
                         <CardDetails key={product.id} product={product} />
                     }
                     <div className="dsc-btn-page-container">
-                        <ButtonPrimary text='Comprar' />
+                        <div onClick={handleBuyClick}>
+                            <ButtonPrimary text='Comprar' />
+                        </div>
                         <Link to={'/'}>
                             <ButtonInverse text='Início' />
                         </Link>
