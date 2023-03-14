@@ -28,6 +28,7 @@
   .dsc-search-bar button {
     width: 40px;
     color: var(--dsc-color-font-primary);
+    cursor: pointer;
   }
   
   .dsc-search-bar button[type="submit"] {
@@ -35,7 +36,7 @@
     border-radius: 4px 0 0 4px;
   }
   
-  .dsc-search-bar button[type="reset"] {
+  .dsc-search-bar > .dsc-btn-clear {
     border-left: none;
     border-radius: 0 4px 4px 0;
   }
