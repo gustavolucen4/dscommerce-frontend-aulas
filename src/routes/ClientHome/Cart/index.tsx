@@ -1,18 +1,20 @@
 import './style.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { OrderDTO, OrderItemDTO } from '../../../models/order';
 import { Link } from 'react-router-dom';
 import ButtonInverse from '../../../components/ButtonInverse';
 import * as cartService from '../../../service/cart-service'
+import { ContextCartCount } from '../../../utils/context-cart';
 
 
 export default function Cart() {
 
     const [cart, setCart] = useState<OrderDTO>(cartService.getCart())
+    const { setContextCartCount } = useContext(ContextCartCount);
 
     function handleClearClick() {
         cartService.clearCart();
-        setCart(cartService.getCart());
+        updateCart();
     }
 
     function handleIncreaseClick(number: number) {
@@ -22,7 +24,13 @@ export default function Cart() {
 
     function handleDecreaseClick(number: number) {
         cartService.decreaseItem(number);
-        setCart(cartService.getCart());
+        updateCart();
+    }
+
+    function updateCart(){
+        const localstorageCart = cartService.getCart()
+        setCart(localstorageCart);
+        setContextCartCount(localstorageCart.items.length);
     }
 
     return (
