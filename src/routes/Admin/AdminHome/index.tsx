@@ -2,7 +2,6 @@ import './style.css';
 import { useEffect, useState } from 'react';
 import { UserDTO } from '../../../models/user';
 import * as userService from '../../../service/user-service'
-import * as authService from '../../../service/auth-service'
 
 export default function AdminHome() {
 
@@ -12,8 +11,8 @@ export default function AdminHome() {
         userService.findMe()
             .then(response => {
                 setUser(response.data);
-            })
-            .catch(error => console.log(error));
+            });
+
     }, [])
 
     return (
