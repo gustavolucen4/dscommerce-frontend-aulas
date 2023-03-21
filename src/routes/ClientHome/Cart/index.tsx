@@ -1,14 +1,16 @@
 import './style.css';
 import { useContext, useEffect, useState } from 'react';
 import { OrderDTO, OrderItemDTO } from '../../../models/order';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ButtonInverse from '../../../components/ButtonInverse';
 import * as cartService from '../../../service/cart-service'
+import * as orderService from '../../../service/order-service'
 import { ContextCartCount } from '../../../utils/context-cart';
 
 
 export default function Cart() {
 
+    const navigate = useNavigate();
     const [cart, setCart] = useState<OrderDTO>(cartService.getCart())
     const { setContextCartCount } = useContext(ContextCartCount);
 
@@ -31,6 +33,15 @@ export default function Cart() {
         const localstorageCart = cartService.getCart()
         setCart(localstorageCart);
         setContextCartCount(localstorageCart.items.length);
+    }
+
+    function handlePlaceOrderClick() {
+        orderService.placeOrderRequest(cart)
+            .then(response => {
+                cartService.clearCart();
+                setContextCartCount(0);
+                navigate(`/confirmation/${response.data.id}`)
+            })
     }
 
     return (
@@ -76,7 +87,7 @@ export default function Cart() {
                         )
                 }
                 <div className="dsc-btn-page-container">
-                    <div className="dsc-btn dsc-btn-blue">
+                    <div onClick={handlePlaceOrderClick} className="dsc-btn dsc-btn-blue">
                         Finalizar pedido
                     </div>
                     <div className="dsc-btn dsc-btn-white">
