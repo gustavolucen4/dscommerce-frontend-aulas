@@ -15,6 +15,8 @@ import * as authService from './service/auth-service'
 import { AccessTokenPayloadDTO } from './models/auth';
 import { ContextToken } from './utils/context-token';
 import Confirmation from './routes/ClientHome/Confirmation';
+import ProductListing from './routes/Admin/ProductListing';
+import ProductForm from './routes/Admin/ProductForm';
 
 function App() {
 
@@ -43,7 +45,10 @@ function App() {
                             <Route path='confirmation/:orderId' element={<PrivateRoute><Confirmation /></PrivateRoute>} />
                         </Route>
                         <Route path='/admin/' element={<PrivateRoute roles={['ROLE_ADMIN']} ><Admin /></PrivateRoute>}>
-                            <Route index element={<AdminHome />} />
+                            <Route index element={<Navigate to={'home'} />} />
+                            <Route path='home' element={<AdminHome />}/>
+                            <Route path='products' element={<ProductListing />} />
+                            <Route path='products/:productId' element={<ProductForm />} />
                         </Route>
                         <Route path='*' element={<Navigate to={'/'} />} />
                     </Routes>
