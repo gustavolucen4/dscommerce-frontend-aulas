@@ -7,6 +7,7 @@ import * as productService from '../../../service/product-service'
 import SearchBar from '../../../components/SearchBar';
 import ButtonNextPage from '../../../components/ButtonNextPage';
 import DialogInfo from '../../../components/DialogInfo';
+import DialogConfirmation from '../../../components/DialogConfirmation';
 
 type QueryParams = {
     page: number;
@@ -28,6 +29,11 @@ export default function ProductListing() {
         message: "Sucesso!"
     })
 
+    const [dialogConfirmData, setDialogConfirmData] = useState({
+        visible: false,
+        message: "Você tem certeza ?"
+    })
+
     useEffect(() => {
         productService.findPageRequest(queryParams.page, queryParams.name)
             .then(result => {
@@ -47,12 +53,18 @@ export default function ProductListing() {
     }
 
     function handleDialogClose() {
-        setDialogInfoData({...dialogInfoData, visible: false})
+        setDialogInfoData({ ...dialogInfoData, visible: false });
     }
 
     function handleDeleteProductClick() {
-        setDialogInfoData({...dialogInfoData, visible: true})
+        setDialogConfirmData({ ...dialogConfirmData, visible: true });
     }
+
+    function handleConfirmationDialogClose(answer: boolean) {
+        console.log(answer);
+        setDialogConfirmData({ ...dialogConfirmData, visible: false });
+    }
+
 
     return (
         <main>
@@ -102,7 +114,11 @@ export default function ProductListing() {
 
             {
                 dialogInfoData.visible &&
-                <DialogInfo message={dialogInfoData.message} onDiologClose={handleDialogClose}/>
+                <DialogInfo message={dialogInfoData.message} onDiologClose={handleDialogClose} />
+            }
+            {
+                dialogConfirmData.visible &&
+                <DialogConfirmation message={dialogConfirmData.message} onDiologAnswer={handleConfirmationDialogClose} />
             }
 
         </main>
