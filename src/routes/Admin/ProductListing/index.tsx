@@ -1,10 +1,58 @@
 import './style.css';
-import computerImg from '../../../assets/computer.png';
 import deleteImg from '../../../assets/delete.svg';
 import editeImg from '../../../assets/edite.svg';
+import { useEffect, useState } from 'react';
+import { ProductDTO } from '../../../models/product';
+import * as productService from '../../../service/product-service'
+import SearchBar from '../../../components/SearchBar';
+import ButtonNextPage from '../../../components/ButtonNextPage';
+import DialogInfo from '../../../components/DialogInfo';
 
+type QueryParams = {
+    page: number;
+    name: string;
+}
 
 export default function ProductListing() {
+
+    const [isLastPage, setIsLastPage] = useState(false);
+
+    const [products, setProducts] = useState<ProductDTO[]>([]);
+    const [queryParams, setQueryParams] = useState<QueryParams>({
+        page: 0,
+        name: ''
+    });
+
+    const [dialogInfoData, setDialogInfoData] = useState({
+        visible: false,
+        message: "Sucesso!"
+    })
+
+    useEffect(() => {
+        productService.findPageRequest(queryParams.page, queryParams.name)
+            .then(result => {
+                const nextPage = result.data.content
+                setProducts(products.concat(nextPage));
+                setIsLastPage(result.data.last);
+            })
+    }, [queryParams])
+
+    function handleSearchSubmit(value: string) {
+        setProducts([]);
+        setQueryParams({ page: 0, name: value });
+    }
+
+    function handleNextPageClick() {
+        setQueryParams({ ...queryParams, page: queryParams.page + 1 });
+    }
+
+    function handleDialogClose() {
+        setDialogInfoData({...dialogInfoData, visible: false})
+    }
+
+    function handleDeleteProductClick() {
+        setDialogInfoData({...dialogInfoData, visible: true})
+    }
 
     return (
         <main>
@@ -15,11 +63,7 @@ export default function ProductListing() {
                     <div className="dsc-btn dsc-btn-white">Novo</div>
                 </div>
 
-                <form className="dsc-search-bar">
-                    <button type="submit">🔎︎</button>
-                    <input type="text" placeholder="Nome do produto" />
-                    <button type="reset">🗙</button>
-                </form>
+                <SearchBar onNewValue={handleSearchSubmit} />
 
                 <table className="dsc-table dsc-mb20 dsc-mt20">
                     <thead>
@@ -33,36 +77,34 @@ export default function ProductListing() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className="dsc-tb576">341</td>
-                            <td><img className="dsc-product-listing-image" src={computerImg} alt="Computer" /></td>
-                            <td className="dsc-tb768">R$ 5000,00</td>
-                            <td className="dsc-txt-left">Computador Gamer XT Plus Ultra</td>
-                            <td><img className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
-                            <td><img className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
-                        </tr>
-                        <tr>
-                            <td className="dsc-tb576">341</td>
-                            <td><img className="dsc-product-listing-image" src={computerImg} alt="Computer" /></td>
-                            <td className="dsc-tb768">R$ 5000,00</td>
-                            <td className="dsc-txt-left">Computador Gamer XT Plus Ultra</td>
-                            <td><img className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
-                            <td><img className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
-                        </tr>
-                        <tr>
-                            <td className="dsc-tb576">341</td>
-                            <td><img className="dsc-product-listing-image" src={computerImg} alt="Computer" /></td>
-                            <td className="dsc-tb768">R$ 5000,00</td>
-                            <td className="dsc-txt-left">Computador Gamer XT Plus Ultra</td>
-                            <td><img className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
-                            <td><img className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
-                        </tr>
-
+                        {
+                            products.map(item => {
+                                return (
+                                    <tr key={item.id}>
+                                        <td className="dsc-tb576">{item.id}</td>
+                                        <td><img className="dsc-product-listing-image" src={item.imgUrl} alt="Computer" /></td>
+                                        <td className="dsc-tb768">R$ {item.price}</td>
+                                        <td className="dsc-txt-left">{item.name}</td>
+                                        <td><img className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
+                                        <td><img onClick={handleDeleteProductClick} className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </table>
 
-                <div className="dsc-btn-next-page">Carregar mais</div>
+                {
+                    !isLastPage &&
+                    <ButtonNextPage onNextPage={handleNextPageClick} />
+                }
             </section>
+
+            {
+                dialogInfoData.visible &&
+                <DialogInfo message={dialogInfoData.message} onDiologClose={handleDialogClose}/>
+            }
+
         </main>
     );
 }
