@@ -392,6 +392,10 @@ nav a {
   margin-bottom: 20px;
 }
 
+.dsc-dialog-button {
+  width: 100%;
+}
+
 .dsc-dialog-button-container {
   width: 100%;
   display: grid;

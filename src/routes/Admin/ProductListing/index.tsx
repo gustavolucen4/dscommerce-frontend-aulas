@@ -31,6 +31,7 @@ export default function ProductListing() {
 
     const [dialogConfirmData, setDialogConfirmData] = useState({
         visible: false,
+        id: 0,
         message: "Você tem certeza ?"
     })
 
@@ -56,12 +57,22 @@ export default function ProductListing() {
         setDialogInfoData({ ...dialogInfoData, visible: false });
     }
 
-    function handleDeleteProductClick() {
-        setDialogConfirmData({ ...dialogConfirmData, visible: true });
+    function handleDeleteProductClick(productId: number) {
+        setDialogConfirmData({ ...dialogConfirmData, visible: true, id: productId });
     }
 
-    function handleConfirmationDialogClose(answer: boolean) {
-        console.log(answer);
+    function handleConfirmationDialogClose(answer: boolean, productId: number) {
+        if (answer) {
+            productService.deleteProduct(productId)
+                .then(() => {
+                    setProducts([]);
+                    setQueryParams({ page: 0, name: '' });
+
+                }).catch((error) => {
+                    setDialogInfoData({ visible: true, message: error.response.data.error })
+                })
+        }
+
         setDialogConfirmData({ ...dialogConfirmData, visible: false });
     }
 
@@ -98,7 +109,7 @@ export default function ProductListing() {
                                         <td className="dsc-tb768">R$ {item.price}</td>
                                         <td className="dsc-txt-left">{item.name}</td>
                                         <td><img className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
-                                        <td><img onClick={handleDeleteProductClick} className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
+                                        <td><img onClick={() => handleDeleteProductClick(item.id)} className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>
                                     </tr>
                                 )
                             })
@@ -118,7 +129,7 @@ export default function ProductListing() {
             }
             {
                 dialogConfirmData.visible &&
-                <DialogConfirmation message={dialogConfirmData.message} onDiologAnswer={handleConfirmationDialogClose} />
+                <DialogConfirmation id={dialogConfirmData.id} message={dialogConfirmData.message} onDiologAnswer={handleConfirmationDialogClose} />
             }
 
         </main>
