@@ -5,7 +5,7 @@
   --dsc-color-bg-secondary: #ffe500;
   --dsc-color-bg-tertiary: #636363;
   --dsc-color-bg-quaternary: #0caf1d;
-  --dsc-color-bg-counter:#F00;
+  --dsc-color-bg-counter: #F00;
 
   --dsc-color-card-bg: #fff;
   --dsc-color-card-border: #d9d9d9;
@@ -239,7 +239,7 @@ nav a {
   color: var(--dsc-color-font-placeholder);
 }
 
-.dsc-input-error {
+.dsc-form-control[data-invalid="true"][data-dirty="true"] {
   border: 1px solid var(--dsc-color-error);
 }
 
@@ -247,6 +247,11 @@ nav a {
   color: var(--dsc-color-error);
   font-size: 12px;
   padding-left: 4px;
+  display: none;
+}
+
+.dsc-form-control[data-invalid="true"][data-dirty="true"] ~ div {
+  display: unset;
 }
 
 .dsc-select:invalid {

@@ -41,8 +41,6 @@ export default function ProductForm() {
 
     useEffect(() => {
 
-        console.log(forms.validate(formData, 'price'));
-
         if(isEditing){
             productService.findById(Number(params.productId))
                 .then(response => {
@@ -55,7 +53,13 @@ export default function ProductForm() {
         const name = event.target.name;
         const value = event.target.value;
 
-        setFormData(forms.update(formData, name, value));
+        const dataUpdated = forms.update(formData, name, value);
+        const dataValidated = forms.validate(dataUpdated, name);
+        setFormData(dataValidated);
+    }
+
+    function handleTurnDirty(name: string) {
+        setFormData(forms.toDirty(formData, name));
     }
 
     return (
@@ -66,13 +70,15 @@ export default function ProductForm() {
                         <h2>Dados do produto</h2>
                         <div className="dsc-form-controls-container">
                             <div>
-                                <FormInput {...formData.name} className="dsc-form-control" onChange={handleInputChange} />
+                                <FormInput {...formData.name} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty} />
+                                <div className='dsc-form-error' >{formData.name.message}</div>
                             </div>
                             <div>
-                                <FormInput {...formData.price} className="dsc-form-control" onChange={handleInputChange} />
+                                <FormInput {...formData.price} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
+                                <div className='dsc-form-error' >{formData.price.message}</div>
                             </div>
                             <div>
-                                <FormInput {...formData.imgUrl} className="dsc-form-control" onChange={handleInputChange} />
+                                <FormInput {...formData.imgUrl} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
                             </div>
 
                         </div>
