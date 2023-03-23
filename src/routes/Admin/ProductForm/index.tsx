@@ -53,13 +53,11 @@ export default function ProductForm() {
         const name = event.target.name;
         const value = event.target.value;
 
-        const dataUpdated = forms.update(formData, name, value);
-        const dataValidated = forms.validate(dataUpdated, name);
-        setFormData(dataValidated);
+        setFormData(forms.updateAndValidate(formData, name, value));
     }
 
     function handleTurnDirty(name: string) {
-        setFormData(forms.toDirty(formData, name));
+        setFormData(forms.dirtyAndValidate(formData, name));
     }
 
     return (
