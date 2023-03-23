@@ -66,10 +66,11 @@ export default function Login() {
                         <div className="dsc-form-controls-container">
                             <div>
                                 <FormInput { ...formData.username } className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
-                                <div className="dsc-form-error"></div>
+                                <div className="dsc-form-error">{formData.username.message}</div>
                             </div>
                             <div>
                                 <FormInput  { ...formData.password } className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
+                                <div className="dsc-form-error">{formData.password.message}</div>
                             </div>
                         </div>
 
