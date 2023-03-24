@@ -120,7 +120,7 @@ export default function ProductListing() {
                                     <tr key={item.id}>
                                         <td className="dsc-tb576">{item.id}</td>
                                         <td><img className="dsc-product-listing-image" src={item.imgUrl} alt="Computer" /></td>
-                                        <td className="dsc-tb768">R$ {item.price}</td>
+                                        <td className="dsc-tb768">R$ {item.price.toFixed(2)}</td>
                                         <td className="dsc-txt-left">{item.name}</td>
                                         <td><img onClick={() => handleUpdateProductClick(item.id)} className="dsc-product-listing-btn" src={editeImg} alt="Editar" /></td>
                                         <td><img onClick={() => handleDeleteProductClick(item.id)} className="dsc-product-listing-btn" src={deleteImg} alt="Deletar" /></td>

@@ -31,3 +31,27 @@ export function deleteProduct(id: number) {
 
     return requestBackend(config);
 }
+
+export function updateRequest(body: any) {
+
+    const config: AxiosRequestConfig = {
+        method: 'PUT',
+        url: `/products/${body.id}`,
+        withCredentials: true,
+        data:body
+    }
+
+    return requestBackend(config);
+}
+
+export function insertRequest(body: any) {
+
+    const config: AxiosRequestConfig = {
+        method: 'POST',
+        url: `/products`,
+        withCredentials: true,
+        data:body
+    }
+
+    return requestBackend(config);
+}
