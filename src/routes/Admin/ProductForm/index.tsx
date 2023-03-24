@@ -71,12 +71,12 @@ export default function ProductForm() {
         }
     })
 
-    useEffect(()=> {
+    useEffect(() => {
         categoryService.findAllRequest()
             .then(response => {
                 setCategories(response.data);
             })
-    },[])
+    }, [])
 
     useEffect(() => {
         if (isEditing) {
@@ -98,17 +98,23 @@ export default function ProductForm() {
         setFormData(forms.dirtyAndValidate(formData, name));
     }
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]
+    function handleSubmitClick(event: any) {
+        event.preventDefault();
+    
+        const formDataValidated = forms.dirtyAndValidateAll(formData);
+        console.log(formDataValidated)
+        if(forms.hasAnyInvalid(formDataValidated)) {
+            setFormData(formDataValidated);
+            
+            return;
+        }
+    }
 
     return (
         <main>
             <section id="product-form-section" className="dsc-container">
                 <div className="dsc-product-form-container">
-                    <form className="dsc-card dsc-form">
+                    <form className="dsc-card dsc-form" onSubmit={handleSubmitClick}>
                         <h2>Dados do produto</h2>
                         <div className="dsc-form-controls-container">
                             <div>
@@ -123,19 +129,19 @@ export default function ProductForm() {
                                 <FormInput {...formData.imgUrl} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty} />
                             </div>
                             <div>
-                                <FormSelect 
-                                {...formData.categories}
-                                className="dsc-form-control dsc-form-select-container" 
-                                styles={selectStyles}
-                                onChange={(obj: any) => {
-                                    const newFormData = forms.updateAndValidate(formData, 'categories', obj);
-                                    setFormData(newFormData);
-                                }} 
-                                options={categories} 
-                                onTurnDirty={handleTurnDirty}
-                                isMulti 
-                                getOptionLabel={(obj: any) => obj.name } 
-                                getOptionValue={(obj: any) => String(obj.id)}/>
+                                <FormSelect
+                                    {...formData.categories}
+                                    className="dsc-form-control dsc-form-select-container"
+                                    styles={selectStyles}
+                                    onChange={(obj: any) => {
+                                        const newFormData = forms.updateAndValidate(formData, 'categories', obj);
+                                        setFormData(newFormData);
+                                    }}
+                                    options={categories}
+                                    onTurnDirty={handleTurnDirty}
+                                    isMulti
+                                    getOptionLabel={(obj: any) => obj.name}
+                                    getOptionValue={(obj: any) => String(obj.id)} />
                                 <div className='dsc-form-error' >{formData.categories.message}</div>
                             </div>
                             <div>
