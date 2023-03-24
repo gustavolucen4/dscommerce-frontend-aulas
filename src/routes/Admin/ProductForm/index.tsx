@@ -6,7 +6,6 @@ import * as forms from '../../../utils/forms'
 import * as productService from '../../../service/product-service'
 import * as categoryService from '../../../service/category-service'
 import FormTextArea from '../../../components/FormTextArea';
-import Select from 'react-select';
 import { CategoryDTO } from '../../../models/category';
 import FormSelect from '../../../components/FormSelect';
 import { selectStyles } from '../../../utils/select';
@@ -123,7 +122,10 @@ export default function ProductForm() {
         
         request.then(() => {
             navigate('/admin/products');
-        })
+        }).catch((error => {
+            const newInputs = forms.setBackendErros(formData, error.response.data.errors)
+            setFormData(newInputs);
+        }))
     }
 
     return (

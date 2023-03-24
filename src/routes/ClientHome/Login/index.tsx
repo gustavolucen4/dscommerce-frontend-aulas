@@ -12,6 +12,8 @@ export default function Login() {
     const navigate = useNavigate();
     const { setContextTokenPayload } = useContext(ContextToken);
 
+    const [submitResponseFail, setSubmitResponseFail] = useState(false);
+
     const [formData, setFormData] = useState<any>({
         username: {
             value: "",
@@ -32,9 +34,19 @@ export default function Login() {
             placeholder: "Senha",
         }
     })
-
+    
     function handleSubmit(event: any) {
         event.preventDefault();
+
+        setSubmitResponseFail(false);
+
+        const formDataValidated = forms.dirtyAndValidateAll(formData);
+        console.log(formDataValidated)
+        if(forms.hasAnyInvalid(formDataValidated)) {
+            setFormData(formDataValidated);
+            return;
+        }
+
         authService.loginRequest(forms.toValues(formData))
             .then((response) => {
                 authService.saveAccessToken(response.data.access_token);
@@ -42,7 +54,7 @@ export default function Login() {
                 navigate('/cart');
             })
             .catch(error => {
-                console.log(error);
+                setSubmitResponseFail(true);
             })
     }
 
@@ -65,14 +77,22 @@ export default function Login() {
                         <h2>Login</h2>
                         <div className="dsc-form-controls-container">
                             <div>
-                                <FormInput { ...formData.username } className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
+                                <FormInput {...formData.username} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty} />
                                 <div className="dsc-form-error">{formData.username.message}</div>
                             </div>
                             <div>
-                                <FormInput  { ...formData.password } className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty}/>
+                                <FormInput  {...formData.password} className="dsc-form-control" onChange={handleInputChange} onTurnDirty={handleTurnDirty} />
                                 <div className="dsc-form-error">{formData.password.message}</div>
                             </div>
                         </div>
+
+
+                        {
+                            submitResponseFail &&
+                            <div className='dsc-form-global-error'>
+                                Email ou Senha invalidos
+                            </div>
+                        }
 
                         <div className="dsc-login-form-buttons dsc-mt20">
                             <button type="submit" className="dsc-btn dsc-btn-blue">Entrar</button>

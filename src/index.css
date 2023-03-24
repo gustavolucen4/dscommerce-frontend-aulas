@@ -255,6 +255,17 @@ nav a {
   display: none;
 }
 
+.dsc-form-global-error {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid var(--dsc-color-error);
+  color: var(--dsc-color-error);
+  padding: 5px 10px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+}
+
 .dsc-form-control[data-invalid="true"][data-dirty="true"] ~ div {
   display: unset;
 }
